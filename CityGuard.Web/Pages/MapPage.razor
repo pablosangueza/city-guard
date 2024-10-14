@@ -12,11 +12,13 @@
            Height="800"
            Width="100"
            Zoom="10"
-           Markers="markers" />
+           Markers="_markers" 
+           Clickable="true"
+           OnMarkerClick="OnGoogleMapMarkerClick"/>
 
 
 @code {
-    List<GoogleMapMarker> markers = new()
+    private List<GoogleMapMarker> _markers = new()
     {
         new GoogleMapMarker()
         {
@@ -36,5 +38,9 @@
         }
 
     };
+
+    private void OnGoogleMapMarkerClick(GoogleMapMarker marker)
+    {
+    }
 
 }

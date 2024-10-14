@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace CityGuard.Web.Model
 {
-    public class DangerComplaint
+    public class ReportComment
     {
-        
+        public int DangerEvaluation { get; set; }
+        public string TextComment { get; set; }
+
     }
 }
