@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using CityGuard.Web.Data;
+using CityGuard.Web.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddBlazorBootstrap();
+
+builder.Services.AddSingleton<IDataService, MockDataService>();
+
 
 var app = builder.Build();
 

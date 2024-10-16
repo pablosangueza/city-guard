@@ -1,26 +1,36 @@
 @page "/map-page"
 
 @using BlazorBootstrap
+@using CityGuard.Web.Components
+@using CityGuard.Web.Model
+@using CityGuard.Web.Service
 
-@* @inherits GoogleMapDemoComponentBase *@
 
 <PageTitle>City Guard</PageTitle>
 
+<Modal @ref="modal" />
 
 <GoogleMap ApiKey="AIzaSyBEzWZEQWluN1zxZOPpMX4DsJ1G9wK8V68"
            Center="new GoogleMapCenter(-17.4174194,-66.1379203)"
-           Height="800"
+           Height="1000"
            Width="100"
-           Zoom="10"
+           Zoom="15"
            Markers="_markers" 
            Clickable="true"
-           OnMarkerClick="OnGoogleMapMarkerClick"/>
+           OnMarkerClick="@(marker => OnGoogleMapMarkerClick(marker))" />
 
 
 @code {
+
+    private Modal modal = default!;
+    private IEnumerable<DangerReport> _dangerReports = default!;
+
+    [Inject] public IDataService FakeDataService { get; set; } = default!;
+
+    
     private List<GoogleMapMarker> _markers = new()
     {
-        new GoogleMapMarker()
+        @* new GoogleMapMarker()
         {
             //Content = "<i class='bi bi-exclamation-octagon-fill fs-4 text-danger'></i>",
              //Content = "<i class='fas fa-skull fs-4 text-dark' style='font-size: 7rem; color: red;'></i>",
@@ -35,12 +45,35 @@
             Position = new GoogleMapMarkerPosition(-17.424611, -66.134080),
             Title = "Danger Point",
             
-        }
+        } *@
 
     };
 
-    private void OnGoogleMapMarkerClick(GoogleMapMarker marker)
+    protected override async Task OnInitializedAsync()
     {
+        _dangerReports = FakeDataService.GetDangerReports();
+        foreach(var dr in _dangerReports)
+        {
+            _markers.Add(new GoogleMapMarker()
+            {
+               
+                Content = "<i class='fas fa-skull-crossbones fs-4 text-dark' style='font-size: 20rem; color: red;'></i>",
+                Position = new GoogleMapMarkerPosition((double)dr.Latitude,(double) dr.Longitude),
+                Title = dr.Id.ToString()
+
+            });
+        }
+
+    }
+
+    private async Task OnGoogleMapMarkerClick(GoogleMapMarker marker)
+    {
+        var parameters = new Dictionary<string, object>();
+        var report = _dangerReports.Where(x=>x.Id.ToString() == marker.Title).FirstOrDefault();
+        
+        parameters.Add("DangerReport",report);
+        await modal.ShowAsync<DangerReportViewComponent>(title: "Danger Point", parameters: parameters);
+        
     }
 
 }

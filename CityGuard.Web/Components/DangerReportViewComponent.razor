@@ -1,0 +1,68 @@
+@using CityGuard.Web.Model
+@inject IJSRuntime JsRuntime
+
+@* <div class="card case-detail">
+<div class="card-body">
+Danger Report modal
+</div>
+</div> *@
+
+
+
+<div class="card case-detail">
+    <div class="card-body">
+        <h5 class="modal-title" id="dangerReportModalLabel">@DangerReport.DangerType</h5>
+        <div class="post-content">
+
+            <p><strong>Description:</strong> @DangerReport.DangerDescription</p>
+        </div>
+
+        <hr />
+
+        <!-- Likes Section -->
+        <div class="likes">
+            <button class="btn btn-outline-primary" @onclick="AddLike">Like</button>
+            <span>@DangerReport.LikeCount Likes</span>
+        </div>
+
+        <hr />
+
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h6>Comments</h6>
+            @foreach (var comment in DangerReport.Comments)
+            {
+                <div class="comment">
+                    <p>USER: @comment.TextComment</p>
+                </div>
+            }
+
+            <textarea class="form-control" @bind="newComment" placeholder="Add a comment..."></textarea>
+            <button class="btn btn-primary mt-2" @onclick="AddComment">Post Comment</button>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public DangerReport DangerReport { get; set; }
+
+    private string newComment;
+
+    private void AddLike()
+    {
+        DangerReport.LikeCount++;
+    }
+
+    private void AddComment()
+    {
+        if (!string.IsNullOrWhiteSpace(newComment))
+        {
+            DangerReport.Comments.Add(new ReportComment { TextComment = newComment });
+            newComment = string.Empty;
+        }
+    }
+
+}

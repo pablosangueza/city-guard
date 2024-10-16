@@ -7,8 +7,9 @@ namespace CityGuard.Web.Model
 {
     public class DangerReport
     {
-        public int Latitude { get; set; }
-        public int Longitude { get; set; }
+        public Guid Id { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         public DangerType DangerType { get; set; }
         public string DangerDescription { get; set; }
         public int LikeCount { get; set; }
